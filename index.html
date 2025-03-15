@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои финансы</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>💰 Мои финансы</h1>
+        
+        <div class="balance-box">
+            <h2>Баланс: <span id="balance">0 ₽</span></h2>
+            <div class="summary">
+                <div class="income">Доходы: <span id="income">0 ₽</span></div>
+                <div class="expense">Расходы: <span id="expense">0 ₽</span></div>
+            </div>
+        </div>
+
+        <form id="transactionForm">
+            <input type="text" id="description" placeholder="Описание" required>
+            <input type="number" id="amount" placeholder="Сумма" required>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="type" value="income" checked> Доход
+                </label>
+                <label>
+                    <input type="radio" name="type" value="expense"> Расход
+                </label>
+            </div>
+            <button type="submit">Добавить</button>
+        </form>
+
+        <h3>История операций</h3>
+        <div id="transactions"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
