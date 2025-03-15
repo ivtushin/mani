@@ -1,41 +1,85 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мои финансы</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Finance Master</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>💰 Мои финансы</h1>
-        
-        <div class="balance-box">
-            <h2>Баланс: <span id="balance">0 ₽</span></h2>
-            <div class="summary">
-                <div class="income">Доходы: <span id="income">0 ₽</span></div>
-                <div class="expense">Расходы: <span id="expense">0 ₽</span></div>
+        <header class="app-header">
+            <h1>Finance Master</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
+
+        <div class="balance-card">
+            <div class="balance-header">
+                <span>Текущий баланс</span>
+                <i class="fas fa-wallet"></i>
+            </div>
+            <div class="balance-amount" id="balance">0 ₽</div>
+            <div class="balance-stats">
+                <div class="stat-item income">
+                    <span class="stat-label">Доходы</span>
+                    <span class="stat-value" id="income">0 ₽</span>
+                </div>
+                <div class="stat-item expense">
+                    <span class="stat-label">Расходы</span>
+                    <span class="stat-value" id="expense">0 ₽</span>
+                </div>
             </div>
         </div>
 
-        <form id="transactionForm">
-            <input type="text" id="description" placeholder="Описание" required>
-            <input type="number" id="amount" placeholder="Сумма" required>
-            <div class="radio-group">
-                <label>
-                    <input type="radio" name="type" value="income" checked> Доход
-                </label>
-                <label>
-                    <input type="radio" name="type" value="expense"> Расход
-                </label>
-            </div>
-            <button type="submit">Добавить</button>
-        </form>
+        <div class="chart-container">
+            <canvas id="financeChart"></canvas>
+        </div>
 
-        <h3>История операций</h3>
-        <div id="transactions"></div>
+        <div class="transaction-section">
+            <form id="transactionForm" class="transaction-form">
+                <div class="input-group">
+                    <input type="text" id="description" placeholder="Описание операции" required>
+                    <i class="fas fa-comment"></i>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="amount" placeholder="Сумма" required>
+                    <i class="fas fa-ruble-sign"></i>
+                </div>
+                <div class="form-row">
+                    <div class="type-selector">
+                        <button type="button" class="type-btn active" data-type="income">Доход</button>
+                        <button type="button" class="type-btn" data-type="expense">Расход</button>
+                    </div>
+                    <select id="category" class="category-select">
+                        <option value="other">Другое</option>
+                        <option value="food">Еда</option>
+                        <option value="transport">Транспорт</option>
+                        <option value="housing">Жилье</option>
+                        <option value="entertainment">Развлечения</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-plus"></i> Добавить операцию
+                </button>
+            </form>
+
+            <div class="transaction-controls">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">Все</button>
+                    <button class="filter-btn" data-filter="income">Доходы</button>
+                    <button class="filter-btn" data-filter="expense">Расходы</button>
+                </div>
+                <input type="date" id="dateFilter" class="date-filter">
+            </div>
+
+            <div class="transaction-list" id="transactions"></div>
+        </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
