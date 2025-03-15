@@ -69,7 +69,7 @@ function renderTransactions() {
     const container = document.getElementById('transactions');
     container.innerHTML = '';
 
-    const filtered = transactions
+ const filtered = filterTransactions()
         .filter(tr => currentFilter === 'all' || tr.type === currentFilter)
         .sort((a, b) => b.date - a.date);
 
@@ -162,4 +162,63 @@ function toggleTheme() {
 document.addEventListener('DOMContentLoaded', () => {
     initChart();
     updateUI();
+});
+
+// Добавить в script.js
+let dateRange = 'all';
+let customDates = { start: null, end: null };
+
+function toggleDateMenu() {
+    const menu = document.getElementById('dateMenu');
+    menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+}
+
+function setDateRange(range) {
+    dateRange = range;
+    document.getElementById('dateRangeLabel').textContent = {
+        all: 'Весь период',
+        week: 'Эта неделя',
+        month: 'Этот месяц',
+        custom: 'Выбрать даты'
+    }[range];
+    
+    if(range === 'custom') {
+        const start = prompt('Введите начальную дату (YYYY-MM-DD)');
+        const end = prompt('Введите конечную дату (YYYY-MM-DD)');
+        if(start && end) {
+            customDates = { start: new Date(start), end: new Date(end) };
+        }
+    }
+    
+    filterTransactions();
+    toggleDateMenu();
+}
+
+function filterTransactions() {
+    const now = new Date();
+    let filtered = transactions;
+
+    switch(dateRange) {
+        case 'week':
+            const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+            filtered = transactions.filter(tr => new Date(tr.date) >= startOfWeek);
+            break;
+        case 'month':
+            const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+            filtered = transactions.filter(tr => new Date(tr.date) >= startOfMonth);
+            break;
+        case 'custom':
+            filtered = transactions.filter(tr => 
+                new Date(tr.date) >= customDates.start && 
+                new Date(tr.date) <= customDates.end
+            );
+            break;
+    }
+
+    return filtered;
+}
+document.addEventListener('click', (e) => {
+    if(!e.target.closest('.header-controls')) {
+        document.getElementById('dateMenu').style.display = 'none';
+    }
 });
