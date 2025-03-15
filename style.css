@@ -1,168 +1,98 @@
-:root {
-    --primary: linear-gradient(135deg, #007AFF 0%, #0A84FF 100%);
-    --income: linear-gradient(135deg, #32D74B 0%, #28CD41 100%);
-    --expense: linear-gradient(135deg, #FF453A 0%, #E93A30 100%);
-    --bg: #000000;
-    --text: rgba(255,255,255,0.92);
-    --card-bg: #1C1C1E;
-    --border: rgba(255,255,255,0.08);
-    --shadow: 0 8px 32px rgba(0,0,0,0.28);
-    --glass: rgba(28,28,30,0.72);
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell;
-    line-height: 1.6;
-    padding: 1rem;
-    -webkit-font-smoothing: antialiased;
-}
-
-.container {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.app-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    padding: 1rem 0;
-    position: relative;
-}
-
-.logo {
-    font-weight: 700;
-    font-size: 1.8rem;
-    letter-spacing: -0.5px;
-    span {
-        background: var(--primary);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-}
-
-.header-controls {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    position: relative;
-}
-
-.date-range-btn {
-    background: var(--card-bg);
-    border: none;
-    padding: 0.8rem 1.2rem;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    color: var(--text);
-    backdrop-filter: blur(20px);
-    box-shadow: var(--shadow);
-    cursor: pointer;
-    &:hover {
-        background: #2C2C2E;
-    }
-}
-
-.date-menu {
-    position: absolute;
-    top: 110%;
-    right: 0;
-    background: var(--glass);
-    backdrop-filter: blur(40px);
-    border-radius: 14px;
-    padding: 0.8rem;
-    display: none;
-    flex-direction: column;
-    gap: 0.5rem;
-    min-width: 180px;
-    box-shadow: var(--shadow);
+/* style.css */
+/* Обновлённые стили для полей ввода */
+.modern-input {
+    width: 100%;
+    padding: 1.2rem;
     border: 1px solid var(--border);
-    button {
-        padding: 0.8rem;
-        border: none;
-        background: none;
-        color: var(--text);
-        border-radius: 8px;
-        text-align: left;
-        cursor: pointer;
-        &:hover {
-            background: rgba(255,255,255,0.04);
-        }
-    }
+    border-radius: 12px;
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    margin: 0.5rem 0;
 }
 
-.balance-card {
+.modern-input:focus {
+    border-color: #0A84FF;
+    box-shadow: 0 0 0 3px rgba(10,132,255,0.15);
+    outline: none;
+    background: rgba(255,255,255,0.08);
+}
+
+.modern-datepicker {
+    width: 100%;
+    padding: 1.2rem;
+    border: none;
+    border-radius: 12px;
     background: var(--card-bg);
-    padding: 2rem;
+    color: var(--text);
+    -webkit-appearance: none;
+}
+
+/* Стили для многостраничности */
+.app-nav {
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem;
+    background: var(--card-bg);
     border-radius: 20px;
     margin-bottom: 1.5rem;
-    box-shadow: var(--shadow);
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--text);
+    opacity: 0.6;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.nav-item.active {
+    opacity: 1;
+    color: #0A84FF;
+}
+
+.page {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Модальное окно календаря */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+}
+
+.modal-content {
     position: relative;
-    overflow: hidden;
-    &::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(
-            90deg,
-            #32D74B 0%,
-            #0A84FF 50%,
-            #FF453A 100%
-        );
-    }
+    background: var(--card-bg);
+    margin: 15% auto;
+    padding: 2rem;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 20px;
+    animation: modalOpen 0.3s ease;
 }
 
-.transaction-form {
-    background: var(--glass);
-    padding: 1.5rem;
-    border-radius: 18px;
-    margin-bottom: 1.5rem;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-    backdrop-filter: blur(20px);
-}
-
-.submit-btn {
-    background: var(--primary);
-    border-radius: 12px;
-    padding: 1.2rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    &:hover {
-        opacity: 0.9;
-        transform: scale(0.98);
-    }
-}
-
-.transaction-item {
-    background: var(--glass);
-    border: 1px solid var(--border);
-    backdrop-filter: blur(20px);
-    margin: 0.8rem 0;
-    padding: 1.2rem;
-    border-radius: 14px;
-    box-shadow: var(--shadow);
-}
-
-.chart-container {
-    background: var(--glass);
-    border: 1px solid var(--border);
-    backdrop-filter: blur(20px);
-    border-radius: 18px;
-    padding: 1.5rem;
+@keyframes modalOpen {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
 }
