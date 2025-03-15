@@ -1,224 +1,63 @@
-let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-let currentFilter = 'all';
-let financeChart = null;
+// script.js
+// Обновлённый код для многостраничности
+function initRouter() {
+    const pages = document.querySelectorAll('.page');
+    const navItems = document.querySelectorAll('.nav-item');
 
-// Инициализация графика
-function initChart() {
-    const ctx = document.getElementById('financeChart').getContext('2d');
-    
-    const data = {
-        labels: ['Доходы', 'Расходы', 'Баланс'],
-        datasets: [{
-            data: [0, 0, 0],
-            backgroundColor: [
-                '#10b981',
-                '#ef4444',
-                '#6366f1'
-            ],
-            borderWidth: 0
-        }]
-    };
-
-    const config = {
-        type: 'doughnut',
-        data: data,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: var(--text)
-                    }
-                }
+    function showPage(pageId) {
+        pages.forEach(page => {
+            page.classList.remove('active');
+            if(page.id === pageId) {
+                page.classList.add('active');
             }
+        });
+        
+        navItems.forEach(item => {
+            item.classList.remove('active');
+            if(item.dataset.page === pageId) {
+                item.classList.add('active');
+            }
+        });
+    }
+
+    function handleHashChange() {
+        const pageId = location.hash.split('/')[1] || 'home';
+        showPage(pageId);
+    }
+
+    window.addEventListener('hashchange', handleHashChange);
+    handleHashChange();
+}
+
+// Обновлённый календарь
+function initDatePicker() {
+    const dateInputs = document.querySelectorAll('[data-date-input]');
+    
+    dateInputs.forEach(input => {
+        input.addEventListener('click', () => {
+            document.getElementById('calendarModal').style.display = 'block';
+        });
+    });
+
+    document.querySelector('.close').addEventListener('click', () => {
+        document.getElementById('calendarModal').style.display = 'none';
+    });
+
+    window.onclick = function(event) {
+        if(event.target == document.getElementById('calendarModal')) {
+            document.getElementById('calendarModal').style.display = 'none';
         }
-    };
-
-    financeChart = new Chart(ctx, config);
-}
-
-function updateChart() {
-    const income = transactions
-        .filter(tr => tr.type === 'income')
-        .reduce((sum, tr) => sum + tr.amount, 0);
-    
-    const expense = transactions
-        .filter(tr => tr.type === 'expense')
-        .reduce((sum, tr) => sum + tr.amount, 0);
-
-    financeChart.data.datasets[0].data = [income, expense, income - expense];
-    financeChart.update();
-}
-
-function updateBalance() {
-    const income = transactions
-        .filter(tr => tr.type === 'income')
-        .reduce((sum, tr) => sum + tr.amount, 0);
-    
-    const expense = transactions
-        .filter(tr => tr.type === 'expense')
-        .reduce((sum, tr) => sum + tr.amount, 0);
-
-    document.getElementById('income').textContent = `${income.toLocaleString()} ₽`;
-    document.getElementById('expense').textContent = `${expense.toLocaleString()} ₽`;
-    document.getElementById('balance').textContent = `${(income - expense).toLocaleString()} ₽`;
-}
-
-function renderTransactions() {
-    const container = document.getElementById('transactions');
-    container.innerHTML = '';
-
- const filtered = filterTransactions()
-        .filter(tr => currentFilter === 'all' || tr.type === currentFilter)
-        .sort((a, b) => b.date - a.date);
-
-    filtered.forEach(transaction => {
-        const element = document.createElement('div');
-        element.className = `transaction-item ${transaction.type}`;
-        element.innerHTML = `
-            <div class="transaction-meta">
-                <span>${transaction.description}</span>
-                <span class="transaction-category">${transaction.category}</span>
-                <small>${new Date(transaction.date).toLocaleDateString()}</small>
-            </div>
-            <div>
-                <span style="color: ${transaction.type === 'income' ? '#10b981' : '#ef4444'}">
-                    ${transaction.type === 'income' ? '+' : '-'}${transaction.amount.toLocaleString()} ₽
-                </span>
-                <button class="delete-btn" onclick="deleteTransaction(${transaction.id})">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-        `;
-        container.appendChild(element);
-    });
-}
-
-function deleteTransaction(id) {
-    if(confirm('Удалить эту операцию?')) {
-        transactions = transactions.filter(tr => tr.id !== id);
-        saveData();
-        updateUI();
     }
-}
 
-function saveData() {
-    localStorage.setItem('transactions', JSON.stringify(transactions));
-}
-
-function updateUI() {
-    updateBalance();
-    updateChart();
-    renderTransactions();
-}
-
-// Обработчик формы
-document.getElementById('transactionForm').addEventListener('submit', e => {
-    e.preventDefault();
-    
-    const transaction = {
-        id: Date.now(),
-        description: document.getElementById('description').value.trim(),
-        amount: parseFloat(document.getElementById('amount').value),
-        type: document.querySelector('.type-btn.active').dataset.type,
-        category: document.getElementById('category').value,
-        date: new Date().getTime()
-    };
-    
-    if(transaction.description && transaction.amount > 0) {
-        transactions.push(transaction);
-        saveData();
-        updateUI();
-        e.target.reset();
-    }
-});
-
-// Фильтрация
-document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentFilter = btn.dataset.filter;
-        renderTransactions();
+    document.getElementById('datePicker').addEventListener('change', function(e) {
+        // Обработка выбранной даты
+        document.getElementById('calendarModal').style.display = 'none';
     });
-});
-
-// Переключение типа операции
-document.querySelectorAll('.type-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    });
-});
-
-// Переключение темы
-function toggleTheme() {
-    const theme = document.documentElement.getAttribute('data-theme');
-    document.documentElement.setAttribute('data-theme', theme === 'light' ? 'dark' : 'light');
 }
 
 // Инициализация
 document.addEventListener('DOMContentLoaded', () => {
-    initChart();
-    updateUI();
-});
-
-// Добавить в script.js
-let dateRange = 'all';
-let customDates = { start: null, end: null };
-
-function toggleDateMenu() {
-    const menu = document.getElementById('dateMenu');
-    menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
-}
-
-function setDateRange(range) {
-    dateRange = range;
-    document.getElementById('dateRangeLabel').textContent = {
-        all: 'Весь период',
-        week: 'Эта неделя',
-        month: 'Этот месяц',
-        custom: 'Выбрать даты'
-    }[range];
-    
-    if(range === 'custom') {
-        const start = prompt('Введите начальную дату (YYYY-MM-DD)');
-        const end = prompt('Введите конечную дату (YYYY-MM-DD)');
-        if(start && end) {
-            customDates = { start: new Date(start), end: new Date(end) };
-        }
-    }
-    
-    filterTransactions();
-    toggleDateMenu();
-}
-
-function filterTransactions() {
-    const now = new Date();
-    let filtered = transactions;
-
-    switch(dateRange) {
-        case 'week':
-            const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
-            filtered = transactions.filter(tr => new Date(tr.date) >= startOfWeek);
-            break;
-        case 'month':
-            const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-            filtered = transactions.filter(tr => new Date(tr.date) >= startOfMonth);
-            break;
-        case 'custom':
-            filtered = transactions.filter(tr => 
-                new Date(tr.date) >= customDates.start && 
-                new Date(tr.date) <= customDates.end
-            );
-            break;
-    }
-
-    return filtered;
-}
-document.addEventListener('click', (e) => {
-    if(!e.target.closest('.header-controls')) {
-        document.getElementById('dateMenu').style.display = 'none';
-    }
+    initRouter();
+    initDatePicker();
+    // Остальная инициализация
 });
