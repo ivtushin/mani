@@ -126,4 +126,40 @@ document.getElementById('transactionForm').addEventListener('submit', e => {
         date: new Date().getTime()
     };
     
-    if(transaction.description && transaction.amount > 
+    if(transaction.description && transaction.amount > 0) {
+        transactions.push(transaction);
+        saveData();
+        updateUI();
+        e.target.reset();
+    }
+});
+
+// Фильтрация
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        renderTransactions();
+    });
+});
+
+// Переключение типа операции
+document.querySelectorAll('.type-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    });
+});
+
+// Переключение темы
+function toggleTheme() {
+    const theme = document.documentElement.getAttribute('data-theme');
+    document.documentElement.setAttribute('data-theme', theme === 'light' ? 'dark' : 'light');
+}
+
+// Инициализация
+document.addEventListener('DOMContentLoaded', () => {
+    initChart();
+    updateUI();
+});
