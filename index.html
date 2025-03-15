@@ -1,19 +1,32 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="light">
+<html lang="ru" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Finance Master</title>
+    <title>Finance Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header class="app-header">
-            <h1>Finance Master</h1>
-            <button class="theme-toggle" onclick="toggleTheme()">
-                <i class="fas fa-moon"></i>
-            </button>
+            <h1 class="logo">Finance<span>Pro</span></h1>
+            <div class="header-controls">
+                <button class="date-range-btn" onclick="toggleDateMenu()">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span id="dateRangeLabel">Весь период</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="date-menu" id="dateMenu">
+                    <button onclick="setDateRange('all')">Весь период</button>
+                    <button onclick="setDateRange('week')">Эта неделя</button>
+                    <button onclick="setDateRange('month')">Этот месяц</button>
+                    <button onclick="setDateRange('custom')">Выбрать даты</button>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
         </header>
 
         <div class="balance-card">
