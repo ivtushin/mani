@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ru" data-theme="dark">
 <head>
@@ -9,86 +10,59 @@
 </head>
 <body>
     <div class="container">
-        <header class="app-header">
-            <h1 class="logo">Finance<span>Pro</span></h1>
-            <div class="header-controls">
-                <button class="date-range-btn" onclick="toggleDateMenu()">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span id="dateRangeLabel">Весь период</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="date-menu" id="dateMenu">
-                    <button onclick="setDateRange('all')">Весь период</button>
-                    <button onclick="setDateRange('week')">Эта неделя</button>
-                    <button onclick="setDateRange('month')">Этот месяц</button>
-                    <button onclick="setDateRange('custom')">Выбрать даты</button>
-                </div>
-                <button class="theme-toggle" onclick="toggleTheme()">
-                    <i class="fas fa-moon"></i>
-                </button>
-            </div>
-        </header>
+        <nav class="app-nav">
+            <a href="#/" class="nav-item active" data-page="home">
+                <i class="fas fa-home"></i>
+                <span>Главная</span>
+            </a>
+            <a href="#/stats" class="nav-item" data-page="stats">
+                <i class="fas fa-chart-pie"></i>
+                <span>Статистика</span>
+            </a>
+            <a href="#/settings" class="nav-item" data-page="settings">
+                <i class="fas fa-cog"></i>
+                <span>Настройки</span>
+            </a>
+        </nav>
 
-        <div class="balance-card">
-            <div class="balance-header">
-                <span>Текущий баланс</span>
-                <i class="fas fa-wallet"></i>
+        <div class="page-container">
+            <!-- Страница Главная -->
+            <div id="home" class="page active">
+                <!-- Контент предыдущей версии -->
             </div>
-            <div class="balance-amount" id="balance">0 ₽</div>
-            <div class="balance-stats">
-                <div class="stat-item income">
-                    <span class="stat-label">Доходы</span>
-                    <span class="stat-value" id="income">0 ₽</span>
+
+            <!-- Страница Статистики -->
+            <div id="stats" class="page">
+                <div class="stats-header">
+                    <h2>📊 Детальная статистика</h2>
                 </div>
-                <div class="stat-item expense">
-                    <span class="stat-label">Расходы</span>
-                    <span class="stat-value" id="expense">0 ₽</span>
+                <div class="advanced-charts">
+                    <!-- Графики и диаграммы -->
                 </div>
             </div>
-        </div>
 
-        <div class="chart-container">
-            <canvas id="financeChart"></canvas>
-        </div>
-
-        <div class="transaction-section">
-            <form id="transactionForm" class="transaction-form">
-                <div class="input-group">
-                    <input type="text" id="description" placeholder="Описание операции" required>
-                    <i class="fas fa-comment"></i>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="amount" placeholder="Сумма" required>
-                    <i class="fas fa-ruble-sign"></i>
-                </div>
-                <div class="form-row">
-                    <div class="type-selector">
-                        <button type="button" class="type-btn active" data-type="income">Доход</button>
-                        <button type="button" class="type-btn" data-type="expense">Расход</button>
-                    </div>
-                    <select id="category" class="category-select">
-                        <option value="other">Другое</option>
-                        <option value="food">Еда</option>
-                        <option value="transport">Транспорт</option>
-                        <option value="housing">Жилье</option>
-                        <option value="entertainment">Развлечения</option>
+            <!-- Страница Настроек -->
+            <div id="settings" class="page">
+                <div class="settings-item">
+                    <label>Тема приложения</label>
+                    <select id="themeSelect" class="modern-select">
+                        <option value="auto">Авто</option>
+                        <option value="dark">Тёмная</option>
+                        <option value="light">Светлая</option>
                     </select>
                 </div>
-                <button type="submit" class="submit-btn">
-                    <i class="fas fa-plus"></i> Добавить операцию
-                </button>
-            </form>
-
-            <div class="transaction-controls">
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all">Все</button>
-                    <button class="filter-btn" data-filter="income">Доходы</button>
-                    <button class="filter-btn" data-filter="expense">Расходы</button>
-                </div>
-                <input type="date" id="dateFilter" class="date-filter">
             </div>
+        </div>
 
-            <div class="transaction-list" id="transactions"></div>
+        <!-- Модальное окно календаря -->
+        <div id="calendarModal" class="modal">
+            <div class="modal-content">
+                <div class="calendar-header">
+                    <span class="close">&times;</span>
+                    <h3>Выберите дату</h3>
+                </div>
+                <input type="date" id="datePicker" class="modern-datepicker">
+            </div>
         </div>
     </div>
 
